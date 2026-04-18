@@ -1,18 +1,35 @@
-import React from 'react';
-import { Container, Typography, Button, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar'; 
+import { Box} from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import { getAllProducts } from './services/api';
 
 function App() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        setProducts(data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          ยินดีต้อนรับสู่ MiniMart!
-        </Typography>
-        <Button variant="contained" color="primary">
-          เริ่มช้อปปิ้ง
-        </Button>
-      </Box>
-    </Container>
+
+    <Box sx={{ minHeight: '100vh', pb: 5 }}>
+    
+      <CssBaseline />
+      <Navbar />
+
+
+    </Box>
   );
 }
 
