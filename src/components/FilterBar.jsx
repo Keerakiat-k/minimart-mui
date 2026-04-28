@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress, Stack, Chip } from '@mui/material'; 
+import { Box, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material'; 
 import { getAllCategories } from '../services/api';
 
 export default function FilterBar({ selectedCategory, setSelectedCategory }) {
@@ -23,27 +23,42 @@ export default function FilterBar({ selectedCategory, setSelectedCategory }) {
 
     if (loading) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
                 <CircularProgress />
             </Box>
         );
     }
 
+
+    const handleChange = (event) => {
+        setSelectedCategory(event.target.value); 
+    };
+
     return (
-        <Box sx={{ my: 3, display: 'flex', justifyContent: 'center', overflowX: 'auto', pb: 1 }}>
+        <Box>
             
-          <Stack direction="row" spacing={1}>
-            {categories.map((cat) => (
-              <Chip
-                key={cat.id} 
-                label={cat.name} 
-                onClick={() => setSelectedCategory(cat.id)} 
-                color={selectedCategory === cat.id ? 'secondary' : 'default'}
-                variant={selectedCategory === cat.id ? 'filled' : 'outlined'}
-                clickable
-              />
-            ))}
-          </Stack>
+            
+            <FormControl sx={{ minWidth: 200 }}>
+                <InputLabel id="category-select-label">หมวดหมู่สินค้า</InputLabel>
+                <Select
+                    labelId="category-select-label"
+                    id="category-select"
+                    value={selectedCategory} 
+                    label="หมวดหมู่สินค้า" 
+                    onChange={handleChange} 
+                    color="secondary" 
+                >
+                    
+                   
+                    {categories.map((cat) => (
+                        <MenuItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                        </MenuItem>
+                    ))}
+                    
+                </Select>
+            </FormControl>
+
         </Box>
     );
 }
