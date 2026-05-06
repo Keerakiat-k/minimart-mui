@@ -1,9 +1,10 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogActions, Button, Typography, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
-export default function ProductModal({ product, handleClose }) {
+
+export default function ProductModal({ product, handleClose, onAddToCart }) {
     if (!product) return null;
 
     const fallbackImage = 'https://placehold.co/400x400/EAEAEA/777777?text=No+Image';
@@ -24,8 +25,6 @@ export default function ProductModal({ product, handleClose }) {
                     src={imageUrl}
                     alt={product.title}
                     sx={{ width: { xs: '100%', sm: '50%' }, borderRadius: 2, objectFit: 'cover' }}
-
-
                     onError={(e) => {
                         e.target.src = fallbackImage;
                         e.target.onerror = null;
@@ -39,15 +38,27 @@ export default function ProductModal({ product, handleClose }) {
                     <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
                         {product.description}
                     </Typography>
-                    <Typography variant="h4" color="secondary" sx={{ fontWeight: 'bold', mt: 'auto', mb: 1 }}>
-                        ${product.price}
+
+                    
+                    <Typography variant="h4" color="error" sx={{ fontWeight: 'bold', mt: 'auto', mb: 1 }}>
+                        ฿{product.price}
                     </Typography>
                 </Box>
             </DialogContent>
 
             <DialogActions sx={{ px: 3, pb: 3 }}>
-                <Button variant="contained" color="secondary" size="large" fullWidth startIcon={<ShoppingCartIcon />}>
-                    หยิบใส่ตะกร้า
+                <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<ShoppingBasketIcon />}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onAddToCart(product); 
+                        handleClose(); 
+                    }}
+                    sx={{ borderRadius: '20px', px: 3, py: 1, textTransform: 'none', fontSize: '1rem' }}
+                >
+                    เพิ่มลงตะกร้า
                 </Button>
             </DialogActions>
         </Dialog>

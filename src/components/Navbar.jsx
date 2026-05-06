@@ -36,7 +36,6 @@ const Search = styled('div')(({ theme }) => ({
   },
 }));
 
-
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
@@ -60,7 +59,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Navbar({ searchQuery, setSearchQuery }) {
+
+export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartClick }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -88,16 +88,10 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={menuId}
       keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -110,22 +104,16 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 0 items in cart" color="inherit">
-          <Badge badgeContent={0} color="error">
+      <MenuItem onClick={() => { handleMobileMenuClose(); onCartClick(); }}>
+        <IconButton size="large" aria-label="show cart items" color="inherit">
+          <Badge badgeContent={cartCount} color="error">
             <ShoppingCartIcon /> 
           </Badge>
         </IconButton>
@@ -155,14 +143,11 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ 
-                display: { xs: 'none', sm: 'block' },
-                 fontWeight: 'bold' }}
+            sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 'bold' }}
           >
             MiniMart
           </Typography>
 
-         
           <Box sx={{ flexGrow: 1 }} /> 
 
           <Search>
@@ -177,13 +162,12 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
             />
           </Search>
 
-      
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 0 items in cart" color="inherit">
-              <Badge badgeContent={0} color="error"> 
-                <ShoppingCartIcon /> 
+            <IconButton color="inherit" onClick={onCartClick}> 
+              <Badge badgeContent={cartCount} color="error">
+                <ShoppingCartIcon />
               </Badge>
             </IconButton>
             

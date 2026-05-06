@@ -1,45 +1,93 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, CardActions, Typography, Button, CardActionArea } from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Card, Box, Typography, Button } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
-export default function ProductCard({ product, onCardClick }) {
-  
-
+export default function ProductCard({ product, onCardClick, onAddToCart }) {
   const fallbackImage = 'https://placehold.co/400x400/EAEAEA/777777?text=No+Image';
   const imageUrl = product.images && product.images.length > 0 ? product.images[0] : fallbackImage;
-
+  const mockRating = (3 + (product.id % 21) * 0.1).toFixed(1);
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: '0.3s', '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 } }}>
-      
-      <CardActionArea onClick={onCardClick} sx={{ flexGrow: 1 }}>
-        <CardMedia
-          component="img"
-          height="200"
-          image={imageUrl}
+    <Card
+      onClick={onCardClick}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        borderRadius: '12px',
+        p: 2,
+        cursor: 'pointer',
+        transition: '0.3s',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+        '&:hover': { transform: 'translateY(-5px)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }
+      }}
+    >
+
+      <Box sx={{
+        width: '100%',
+        aspectRatio: '1 / 1',
+        backgroundColor: '#f5f5f5',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        mb: 2
+      }}>
+        <img
+          src={imageUrl}
           alt={product.title}
-          sx={{ objectFit: 'cover' }}
-          
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           onError={(e) => {
-            e.target.src = fallbackImage; 
-            e.target.onerror = null; 
+            e.target.src = fallbackImage;
+            e.target.onerror = null;
           }}
         />
-        <CardContent>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', lineHeight: '1.2em', height: '2.4em', overflow: 'hidden' }}>
-            {product.title}
-          </Typography>
-          <Typography variant="h6" color="secondary" sx={{ mt: 1, fontWeight: 'bold' }}>
-            ${product.price}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+      </Box>
 
-      <CardActions sx={{ p: 2, pt: 0 }}>
-        <Button variant="contained" color="secondary" fullWidth startIcon={<ShoppingCartIcon />}>
-          หยิบใส่ตะกร้า
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+
+
+        <Typography variant="h6" sx={{
+          fontWeight: 'bold',
+          fontSize: '1rem',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          mb: 1
+        }}>
+          {product.title}
+        </Typography>
+
+
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <StarIcon sx={{ color: '#FFD700', fontSize: '1.2rem', mr: 0.5 }} />
+          <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>
+            {mockRating}
+          </Typography>
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }} />
+      </Box>
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 'auto' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#d32f2f' }}>
+          ฿{product.price}
+        </Typography>
+
+        <Button 
+          variant="contained" 
+          color="error" 
+          startIcon={<ShoppingBasketIcon />}
+          onClick={(e) => {
+            e.stopPropagation(); 
+            onAddToCart(product); 
+          }}
+          sx={{ borderRadius: '20px', px: 2, textTransform: 'none', fontSize: '0.85rem' }}
+        >
+          เพิ่ม
         </Button>
-      </CardActions>
-      
+      </Box>
     </Card>
   );
 }
