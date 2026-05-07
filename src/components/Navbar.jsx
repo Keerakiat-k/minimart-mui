@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,6 +14,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; 
 import MoreIcon from '@mui/icons-material/MoreVert';
+import PersonIcon from '@mui/icons-material/Person';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Divider from '@mui/material/Divider';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -59,8 +65,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
 export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartClick }) {
+  const navigate = useNavigate(); 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -94,9 +100,41 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      PaperProps={{
+        elevation: 0,
+        sx: {
+          overflow: 'visible',
+          filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+          mt: 1.5,
+          width: 240,
+        },
+      }}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      
+      <MenuItem onClick={() => { handleMenuClose(); navigate('/login'); }}>
+        <ListItemIcon>
+          <PersonIcon fontSize="small" />
+        </ListItemIcon>
+        เข้าสู่ระบบ / สมัครสมาชิก
+      </MenuItem>
+      
+      
+      <MenuItem onClick={() => { handleMenuClose(); navigate('/'); }}>
+        <ListItemIcon>
+          <ReceiptLongIcon fontSize="small" />
+        </ListItemIcon>
+        ประวัติการสั่งซื้อ
+      </MenuItem>
+      
+      <Divider />
+      
+    
+      <MenuItem onClick={() => { handleMenuClose(); navigate('/'); }} sx={{ color: 'error.main' }}>
+        <ListItemIcon>
+          <LogoutIcon fontSize="small" color="error" />
+        </ListItemIcon>
+        ออกจากระบบ
+      </MenuItem>
     </Menu>
   );
 
@@ -120,6 +158,7 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
         <p>ตะกร้าสินค้า</p>
       </MenuItem>
 
+      
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -130,20 +169,21 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>บัญชีของฉัน</p>
       </MenuItem>
     </Menu>
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="sticky">
+    <Box sx={{ flexGrow: 1, position: 'sticky', top: 0, zIndex: 1100 }}>
+      <AppBar position="static">
         <Toolbar>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 'bold' }}
+            sx={{ display: { xs: 'none', sm: 'block' }, fontWeight: 'bold', cursor: 'pointer' }}
+            onClick={() => navigate('/')} 
           >
             MiniMart
           </Typography>

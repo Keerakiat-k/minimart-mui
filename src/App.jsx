@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Container, Box, CircularProgress, CssBaseline } from '@mui/material';
 import Navbar from './components/Navbar';
 import FilterBar from './components/FilterBar';
 import ProductList from './components/ProductList';
 import { getAllProducts } from './services/api';
 import CartDrawer from './components/CartDrawer';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -12,11 +15,11 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cart, setCart] = useState([]);
 
- 
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -30,73 +33,89 @@ function App() {
     fetchProducts();
   }, []);
 
-  
+
   const handleAddToCart = (product) => {
     setCart((prevCart) => {
-      
+
       const existingItem = prevCart.find((item) => item.id === product.id);
 
       if (existingItem) {
-        
+
         return prevCart.map((item) =>
           item.id === product.id ? { ...item, qty: item.qty + 1 } : item
         );
       } else {
-      
+
         return [...prevCart, { ...product, qty: 1 }];
       }
     });
   };
 
-  
+
   const handleRemoveFromCart = (productId) => {
     setCart((prevCart) => prevCart.filter(item => item.id !== productId));
   };
+  const handleCheckout = () => {
+    setCart([]);
+  };
 
-    const totalCartItems = cart.reduce((total, item) => total + item.qty, 0);
-    const filteredProducts = products.filter(product => {
+  const totalCartItems = cart.reduce((total, item) => total + item.qty, 0);
+  const filteredProducts = products.filter(product => {
     const matchCategory = selectedCategory === 'all' || product.category.id === selectedCategory;
     const matchSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCategory && matchSearch;
   });
 
   return (
-    <Box sx={{ minHeight: '100vh', pb: 5 }}>
-      <CssBaseline />
-      <Navbar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        cartCount={totalCartItems}
-        onCartClick={() => setIsCartOpen(true)}
-      />
-      <Container maxWidth="lg" sx={{ mt: 3 }}>
-        <FilterBar
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
+    
+    <BrowserRouter>
+      <Box sx={{ minHeight: '100vh', pb: 5 }}>
+        <CssBaseline />
+        
+        
+        <Navbar 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+          cartCount={totalCartItems}
+          onCartClick={() => setIsCartOpen(true)}
         />
-        {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <ProductList 
-            products={filteredProducts} 
-            onAddToCart={handleAddToCart}
-          />
-        )}
+        
+        
+        <Routes>
+          
+          
+          <Route path="/" element={
+            <Container maxWidth="lg" sx={{ mt: 3 }}>
+              <FilterBar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}><CircularProgress /></Box>
+              ) : (
+                <ProductList products={filteredProducts} onAddToCart={handleAddToCart} />
+              )}
+            </Container>
+          } />
 
-      </Container>
+          
+          <Route path="/login" element={<Login />} />
 
+          
+          <Route path="/signup" element={<Signup />} />
 
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        cart={cart}
-        onRemoveItem={handleRemoveFromCart}
-      />
+        </Routes>
 
-    </Box>
+        
+        <CartDrawer 
+          isOpen={isCartOpen} 
+          onClose={() => setIsCartOpen(false)} 
+          cart={cart}
+          onRemoveItem={handleRemoveFromCart}
+          onCheckout={handleCheckout} 
+        />
+
+      </Box>
+    </BrowserRouter>
   );
+
 }
 
 export default App;
