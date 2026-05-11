@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Container, Box, CircularProgress, CssBaseline } from '@mui/material';
 import Navbar from './components/Navbar';
@@ -8,6 +8,7 @@ import { getAllProducts } from './services/api';
 import CartDrawer from './components/CartDrawer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AddProduct from './pages/AddProduct';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -17,7 +18,16 @@ function App() {
 
 
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cart, setCart] = useState([]);
+ const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('minimart_cart');
+    
+    return savedCart ? JSON.parse(savedCart) : []; 
+  });
+
+  
+  useEffect(() => {
+    localStorage.setItem('minimart_cart', JSON.stringify(cart));
+  }, [cart]); 
 
 
   useEffect(() => {
@@ -67,23 +77,23 @@ function App() {
   });
 
   return (
-    
+
     <BrowserRouter>
       <Box sx={{ minHeight: '100vh', pb: 5 }}>
         <CssBaseline />
-        
-        
-        <Navbar 
-          searchQuery={searchQuery} 
-          setSearchQuery={setSearchQuery} 
+
+
+        <Navbar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
           cartCount={totalCartItems}
           onCartClick={() => setIsCartOpen(true)}
         />
-        
-        
+
+
         <Routes>
-          
-          
+
+
           <Route path="/" element={
             <Container maxWidth="lg" sx={{ mt: 3 }}>
               <FilterBar selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
@@ -95,21 +105,21 @@ function App() {
             </Container>
           } />
 
-          
+
           <Route path="/login" element={<Login />} />
 
-          
-          <Route path="/signup" element={<Signup />} />
 
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/add-product" element={<AddProduct />} />
         </Routes>
 
-        
-        <CartDrawer 
-          isOpen={isCartOpen} 
-          onClose={() => setIsCartOpen(false)} 
+
+        <CartDrawer
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
           cart={cart}
           onRemoveItem={handleRemoveFromCart}
-          onCheckout={handleCheckout} 
+          onCheckout={handleCheckout}
         />
 
       </Box>

@@ -19,7 +19,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 import ListItemIcon from '@mui/material/ListItemIcon';
-
+import AddBoxIcon from '@mui/icons-material/AddBox';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: '50px',
@@ -124,6 +124,12 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
           <ReceiptLongIcon fontSize="small" />
         </ListItemIcon>
         ประวัติการสั่งซื้อ
+      </MenuItem>
+      <MenuItem onClick={() => { handleMenuClose(); navigate('/add-product'); }}>
+        <ListItemIcon>
+          <AddBoxIcon fontSize="small" />
+        </ListItemIcon>
+        เพิ่มสินค้า (Admin)
       </MenuItem>
       
       <Divider />
