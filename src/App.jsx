@@ -4,7 +4,7 @@ import { Container, Box, CircularProgress, CssBaseline } from '@mui/material';
 import Navbar from './components/Navbar';
 import FilterBar from './components/FilterBar';
 import ProductList from './components/ProductList';
-import { getAllProducts } from './services/api';
+import { getAllProducts } from './services/api.js';
 import CartDrawer from './components/CartDrawer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
