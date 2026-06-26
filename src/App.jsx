@@ -18,16 +18,16 @@ function App() {
 
 
   const [isCartOpen, setIsCartOpen] = useState(false);
- const [cart, setCart] = useState(() => {
+  const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('minimart_cart');
-    
-    return savedCart ? JSON.parse(savedCart) : []; 
+
+    return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  
+
   useEffect(() => {
     localStorage.setItem('minimart_cart', JSON.stringify(cart));
-  }, [cart]); 
+  }, [cart]);
 
 
   useEffect(() => {

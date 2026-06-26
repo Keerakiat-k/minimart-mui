@@ -20,6 +20,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import Avatar from '@mui/material/Avatar'; // 🟢 เพิ่ม Avatar เข้ามา
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: '50px',
@@ -94,7 +96,7 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} // เปลี่ยนเป็น bottom เพื่อให้ไม่ทับปุ่มเดิม
       id={menuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -104,38 +106,87 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
         elevation: 0,
         sx: {
           overflow: 'visible',
-          filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+          filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.12))', // 🟢 เงาแบบฟุ้งๆ นุ่มนวล
           mt: 1.5,
-          width: 240,
+          width: 280, // เพิ่มความกว้างให้ดูไม่อึดอัด
+          borderRadius: 3, // ขอบเมนูโค้งมน
+          
+          // 🟢 ลูกศรชี้ขึ้นที่มุมขวาบน
+          '&::before': {
+            content: '""',
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+            right: 14,
+            width: 10,
+            height: 10,
+            bgcolor: 'background.paper',
+            transform: 'translateY(-50%) rotate(45deg)',
+            zIndex: 0,
+          },
+
+          // 🟢 แต่งลูกเล่นให้ตัวเลือกต่างๆ เวลาเอาเมาส์ชี้
+          '& .MuiMenuItem-root': {
+            borderRadius: 2,
+            mx: 1, // เว้นขอบซ้ายขวาให้เป็นเม็ดยา
+            mb: 0.5,
+            padding: '10px 16px',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              backgroundColor: 'rgba(25, 118, 210, 0.08)', // สีฟ้าอ่อนๆ
+              transform: 'translateX(5px)', // ขยับขวานิดนึงเวลานำเมาส์ไปวาง
+            }
+          }
         },
       }}
     >
+      {/* 🟢 เพิ่มส่วนหัวโปรไฟล์ (Profile Header) */}
+      <Box sx={{ px: 3, py: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Avatar sx={{ width: 48, height: 48, bgcolor: '#1976d2' }}>
+          <PersonIcon fontSize="medium" />
+        </Avatar>
+        <Box>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', lineHeight: 1.2, color: '#333' }}>
+            ยินดีต้อนรับ
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            เข้าสู่ระบบเพื่อสั่งซื้อเลย
+          </Typography>
+        </Box>
+      </Box>
+
+      <Divider sx={{ mb: 1, borderColor: 'rgba(0,0,0,0.06)' }} />
       
       <MenuItem onClick={() => { handleMenuClose(); navigate('/login'); }}>
         <ListItemIcon>
-          <PersonIcon fontSize="small" />
+          <PersonIcon fontSize="small" sx={{ color: '#1976d2' }} />
         </ListItemIcon>
         เข้าสู่ระบบ / สมัครสมาชิก
       </MenuItem>
       
-      
       <MenuItem onClick={() => { handleMenuClose(); navigate('/'); }}>
         <ListItemIcon>
-          <ReceiptLongIcon fontSize="small" />
+          <ReceiptLongIcon fontSize="small" sx={{ color: '#757575' }} />
         </ListItemIcon>
         ประวัติการสั่งซื้อ
       </MenuItem>
+
       <MenuItem onClick={() => { handleMenuClose(); navigate('/add-product'); }}>
         <ListItemIcon>
-          <AddBoxIcon fontSize="small" />
+          <AddBoxIcon fontSize="small" sx={{ color: '#2e7d32' }} />
         </ListItemIcon>
         เพิ่มสินค้า (Admin)
       </MenuItem>
       
-      <Divider />
+      <Divider sx={{ my: 1, borderColor: 'rgba(0,0,0,0.06)' }} />
       
-    
-      <MenuItem onClick={() => { handleMenuClose(); navigate('/'); }} sx={{ color: 'error.main' }}>
+      <MenuItem 
+        onClick={() => { handleMenuClose(); navigate('/'); }} 
+        sx={{ 
+          color: 'error.main',
+          '&:hover': { backgroundColor: 'rgba(211, 47, 47, 0.08) !important' } // สีแดงอ่อนตอนโฮเวอร์ปุ่มออกระบบ
+        }}
+      >
         <ListItemIcon>
           <LogoutIcon fontSize="small" color="error" />
         </ListItemIcon>
@@ -154,6 +205,9 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      PaperProps={{
+        sx: { borderRadius: 3, mt: 1.5, filter: 'drop-shadow(0px 8px 24px rgba(0,0,0,0.12))' }
+      }}
     >
       <MenuItem onClick={() => { handleMobileMenuClose(); onCartClick(); }}>
         <IconButton size="large" aria-label="show cart items" color="inherit">
@@ -164,7 +218,6 @@ export default function Navbar({ searchQuery, setSearchQuery, cartCount, onCartC
         <p>ตะกร้าสินค้า</p>
       </MenuItem>
 
-      
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
